@@ -1,4 +1,4 @@
-require "lib_ruby"
+require "./lib_ruby"
 
 struct Nil
   def to_ruby
@@ -44,7 +44,7 @@ module Ruby
     def to_s(io : IO)
       str = LibRuby.rb_funcall(self, ID_TO_S, 0)
       c_str = LibRuby.rb_string_value_cstr(pointerof(str))
-      io.write Slice.new(c_str, C.strlen(c_str))
+      io.write Slice.new(c_str, LibC.strlen(c_str).to_i)
     end
   end
 
@@ -54,5 +54,5 @@ module Ruby
 end
 
 macro ruby_extension(name, code)
-  {{ run "processor", name, code }}
+  {{ run "./processor", name, code }}
 end
